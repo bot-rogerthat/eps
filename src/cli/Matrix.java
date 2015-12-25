@@ -6,9 +6,9 @@ public class Matrix {
     private String[][] matrix;
     private double fillFactor;
 
-    public Matrix(int column, int row, double fillFactor) {
-        this.column = column;
+    public Matrix(int row, int column, double fillFactor) {
         this.row = row;
+        this.column = column;
         this.fillFactor = fillFactor;
         this.matrix = new String[row][column];
     }
@@ -21,8 +21,16 @@ public class Matrix {
         return row;
     }
 
+    public double getFillFactor() {
+        return fillFactor;
+    }
+
     public String getElement(int i, int j) {
         return matrix[i][j];
+    }
+
+    public void setElement(int i, int j, String element) {
+        matrix[i][j] = element;
     }
 
     public void fill() {
@@ -32,6 +40,17 @@ public class Matrix {
                 matrix[i][j] = rand;
             }
         }
+    }
+
+    @Override
+    public Matrix clone() {
+        Matrix clone = new Matrix(row, column, fillFactor);
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < column; j++) {
+                clone.setElement(i, j, this.getElement(i, j));
+            }
+        }
+        return clone;
     }
 
     @Override
