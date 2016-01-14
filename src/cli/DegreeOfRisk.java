@@ -5,5 +5,5 @@ public enum DegreeOfRisk {
     MAJOR,
     NORMAL,
     MINOR,
-    NONE;
+    NONE
 }

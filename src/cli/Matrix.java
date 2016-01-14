@@ -21,10 +21,6 @@ public class Matrix {
         return row;
     }
 
-    public double getFillFactor() {
-        return fillFactor;
-    }
-
     public String getElement(int i, int j) {
         return matrix[i][j];
     }
@@ -57,8 +53,14 @@ public class Matrix {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("m = ").append(row).append(", n = ").append(column).append(", f = ").append(fillFactor).append("\r\n");
-        sb.append("----------------------------------------------------").append("\r\n");
+        sb.append("----------------------------------------------------\r\n");
+        sb.append(" ");
+        for (int k = 0; k < matrix[0].length; k++) {
+            sb.append("  ").append(k);
+        }
+        sb.append("\r\n");
         for (int i = 0; i < matrix.length; i++) {
+            sb.append(i).append(" ");
             for (int j = 0; j < matrix[0].length; j++) {
                 sb.append(matrix[i][j]);
             }

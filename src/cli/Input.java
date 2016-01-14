@@ -7,20 +7,22 @@ public class Input {
         this.params = params;
     }
 
-    private String run() {
-        StringBuilder sb = new StringBuilder();
-        int m = Integer.parseInt(params[0]);
-        int n = Integer.parseInt(params[1]);
-        double f = Double.parseDouble(params[2]);
-        Matrix matrix = new Matrix(m, n, f);
-        matrix.fill();
-        sb.append(matrix);
-        sb.append(new Report(matrix));
-        return sb.toString();
+    public String execute() {
+        try {
+            int m = Integer.parseInt(params[0]);
+            int n = Integer.parseInt(params[1]);
+            double f = Double.parseDouble(params[2]);
+            Matrix matrix = new Matrix(m, n, f);
+            matrix.fill();
+            return matrix.toString() + new Report(matrix);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
     @Override
     public String toString() {
-        return run();
+        return execute();
     }
 }

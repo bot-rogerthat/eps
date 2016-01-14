@@ -9,22 +9,19 @@ public class Parser {
     public Parser() {
         options = new Options();
         options.addOption(Option.builder("m")
-                .longOpt("m")
                 .desc("row")
                 .hasArg()
                 .required()
                 .type(PatternOptionBuilder.NUMBER_VALUE)
                 .build());
         options.addOption(Option.builder("n")
-                .longOpt("n")
                 .desc("column")
                 .hasArg()
                 .required()
                 .type(PatternOptionBuilder.NUMBER_VALUE)
                 .build());
         options.addOption(Option.builder("f")
-                .longOpt("f")
-                .desc("FILL_FACTOR")
+                .desc("fill factor")
                 .hasArg()
                 .required()
                 .type(PatternOptionBuilder.NUMBER_VALUE)
@@ -36,13 +33,17 @@ public class Parser {
         Input input = null;
         try {
             CommandLine cmd = parser.parse(options, args);
-            if (cmd.getOptions().length == 3 && cmd.hasOption("m") && cmd.hasOption("n") && cmd.hasOption("f")) {
+            if (checkParameters(cmd)) {
                 input = new Input(new String[]{cmd.getOptionValue("m"), cmd.getOptionValue("n"), cmd.getOptionValue("f")});
             }
         } catch (ParseException e) {
             HelpFormatter help = new HelpFormatter();
-            help.printHelp("help", options);
+            help.printHelp("command line parameters for eps", options);
         }
         return input;
+    }
+
+    private boolean checkParameters(CommandLine cmd) {
+        return cmd != null && cmd.getOptions().length == 3 && cmd.hasOption("m") && cmd.hasOption("n") && cmd.hasOption("f");
     }
 }
