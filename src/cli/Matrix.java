@@ -11,6 +11,7 @@ public class Matrix {
         this.column = column;
         this.fillFactor = fillFactor;
         this.matrix = new String[row][column];
+        fill();
     }
 
     public int getColumn() {
@@ -22,14 +23,24 @@ public class Matrix {
     }
 
     public String getElement(int i, int j) {
-        return matrix[i][j];
+        try {
+            return matrix[i][j];
+        } catch (Exception e) {
+            throw new RuntimeException("Illegal matrix dimensions.");
+        }
+
     }
 
     public void setElement(int i, int j, String element) {
-        matrix[i][j] = element;
+        try {
+            matrix[i][j] = element;
+        } catch (Exception e) {
+            throw new RuntimeException("Illegal matrix dimensions.");
+        }
+
     }
 
-    public void fill() {
+    private void fill() {
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix[0].length; j++) {
                 String rand = (Math.random() < fillFactor) ? "|X|" : " - ";
@@ -54,18 +65,16 @@ public class Matrix {
         StringBuilder sb = new StringBuilder();
         sb.append("m = ").append(row).append(", n = ").append(column).append(", f = ").append(fillFactor).append("\r\n");
         sb.append("----------------------------------------------------\r\n");
-        sb.append(" ");
-        for (int k = 0; k < matrix[0].length; k++) {
-            sb.append("  ").append(k);
-        }
-        sb.append("\r\n");
-        for (int i = 0; i < matrix.length; i++) {
-            sb.append(i).append(" ");
+        drawMatrix(sb);
+        return sb.toString();
+    }
+
+    private void drawMatrix(StringBuilder sb) {
+        for (String[] aMatrix : matrix) {
             for (int j = 0; j < matrix[0].length; j++) {
-                sb.append(matrix[i][j]);
+                sb.append(aMatrix[j]);
             }
             sb.append("\r\n");
         }
-        return sb.toString();
     }
 }

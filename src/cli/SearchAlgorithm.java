@@ -6,10 +6,10 @@ public class SearchAlgorithm {
     private Matrix matrix;
 
     public SearchAlgorithm(Matrix matrix) {
-        this.matrix = matrix;
+        this.matrix = matrix.clone();
     }
 
-    public Map<DegreeOfRisk, Integer> getGroups(){
+    public Map<DegreeOfRisk, Integer> getGroupFound() {
         Map<DegreeOfRisk, Integer> groups = new HashMap<>();
         List<DegreeOfRisk> listGroups = findGroupsInMatrix();
         for (DegreeOfRisk element : listGroups) {
@@ -19,7 +19,7 @@ public class SearchAlgorithm {
     }
 
     private List<DegreeOfRisk> findGroupsInMatrix() {
-        List<DegreeOfRisk> list = new ArrayList<>();
+        List<DegreeOfRisk> result = new ArrayList<>();
         int count = 0;
         int row = matrix.getRow();
         int column = matrix.getColumn();
@@ -28,42 +28,84 @@ public class SearchAlgorithm {
                 if ("|X|".equals(matrix.getElement(i, j))) {
                     count += checkSideToFind(i, j);
                     if (count > 0 && count < 3) {
-                        list.add(DegreeOfRisk.NONE);
+                        result.add(DegreeOfRisk.NONE);
                         count = 0;
                         continue;
                     }
                     if (count > 2 && count < 5) {
-                        list.add(DegreeOfRisk.MINOR);
+                        result.add(DegreeOfRisk.MINOR);
                         count = 0;
                         continue;
                     }
                     if (count > 4 && count < 8) {
-                        list.add(DegreeOfRisk.NORMAL);
+                        result.add(DegreeOfRisk.NORMAL);
                         count = 0;
                         continue;
                     }
                     if (count > 7 && count < 14) {
-                        list.add(DegreeOfRisk.MAJOR);
+                        result.add(DegreeOfRisk.MAJOR);
                         count = 0;
                         continue;
                     }
                     if (count > 13) {
-                        list.add(DegreeOfRisk.CRITICAL);
+                        result.add(DegreeOfRisk.CRITICAL);
                         count = 0;
                     }
                 }
             }
         }
-        return list;
+        return result;
     }
 
     private int checkSideToFind(int i, int j) {
         int count = 1;
         matrix.setElement(i, j, " - ");
-        count += checkTop(i, j);
-        count += checkRight(i, j);
-        count += checkBot(i, j);
-        count += checkLeft(i, j);
+
+        List<String> sideList = new ArrayList<>();
+        sideList.add("left");
+        sideList.add("right");
+        sideList.add("top");
+        sideList.add("bot");
+        Iterator iterator = new Iterator() {
+            private int index = 0;
+
+            @Override
+            public boolean hasNext() {
+                return !sideList.isEmpty();
+            }
+
+            @Override
+            public Object next() {
+                Random randNumber = new Random();
+                index = randNumber.nextInt(sideList.size());
+                return sideList.get(index);
+            }
+
+            @Override
+            public void remove() {
+                sideList.remove(index);
+            }
+
+
+        };
+        while (iterator.hasNext()) {
+            switch (iterator.next().toString()) {
+                case "left":
+                    count += checkLeft(i, j);
+                    break;
+                case "right":
+                    count += checkRight(i, j);
+                    break;
+                case "top":
+                    count += checkTop(i, j);
+                    break;
+                case "bot":
+                    count += checkBot(i, j);
+                    break;
+            }
+            iterator.remove();
+        }
+
         return count;
     }
 

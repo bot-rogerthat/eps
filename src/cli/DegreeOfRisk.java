@@ -1,9 +1,9 @@
 package cli;
 
 public enum DegreeOfRisk {
-    CRITICAL,
-    MAJOR,
-    NORMAL,
+    NONE,
     MINOR,
-    NONE
+    NORMAL,
+    MAJOR,
+    CRITICAL
 }

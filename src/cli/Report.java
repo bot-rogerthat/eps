@@ -1,6 +1,7 @@
 package cli;
 
-import java.util.*;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class Report {
     private Matrix matrix;
@@ -9,29 +10,32 @@ public class Report {
         this.matrix = matrix.clone();
     }
 
-    public String getRiskGroupsReport() {
+    public String getReport() {
         StringBuilder report = new StringBuilder();
+        report.append(matrix.toString());
         report.append("\r\nRisk groups report:\r\n----------------------------------------------------\r\n");
-        Map<DegreeOfRisk, Integer> groups = new SearchAlgorithm(matrix).getGroups();
-        List<Map.Entry<DegreeOfRisk, Integer>> entries = sortGroupByValue(groups);
-        for (Map.Entry<DegreeOfRisk, Integer> pair : entries) {
-            report.append(pair.getKey()).append(": ").append(pair.getValue()).append(" groups;\r\n");
-        }
+        Map<DegreeOfRisk, Integer> foundGroups = new SearchAlgorithm(matrix).getGroupFound();
+        addGroupsInReport(report, foundGroups);
         return report.toString();
     }
 
-    private List<Map.Entry<DegreeOfRisk, Integer>> sortGroupByValue(Map<DegreeOfRisk, Integer> map) {
-        List<Map.Entry<DegreeOfRisk, Integer>> list = new ArrayList<>(map.entrySet());
-        Collections.sort(list, (e1, e2) -> {
-            int v1 = e1.getValue();
-            int v2 = e2.getValue();
-            return (v1 < v2) ? 1 : (v1 == v2) ? 0 : -1;
+    private void addGroupsInReport(StringBuilder report, Map<DegreeOfRisk, Integer> target) {
+        Map<DegreeOfRisk, Integer> map = new TreeMap<>();
+        for (DegreeOfRisk e : DegreeOfRisk.values()) {
+            map.put(e, 0);
+        }
+
+        target.entrySet().stream().filter(pair -> map.containsKey(pair.getKey())).forEach(pair -> {
+            map.replace(pair.getKey(), pair.getValue());
         });
-        return list;
+
+        for (Map.Entry<DegreeOfRisk, Integer> pair : map.entrySet()) {
+            report.append(pair.getKey()).append(" = ").append(pair.getValue()).append(" groups;\r\n");
+        }
     }
 
     @Override
     public String toString() {
-        return getRiskGroupsReport();
+        return getReport();
     }
 }
